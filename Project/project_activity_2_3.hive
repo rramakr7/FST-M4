@@ -1,0 +1,32 @@
+-- Drop the tables if they exist
+DROP TABLE episodeIV;
+DROP TABLE episodeV;
+DROP TABLE episodeVI; 
+
+-- Make the tables for each input file
+-- EpisodeVI table
+CREATE TABLE episodeIV (name STRING, line STRING)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' TBLPROPERTIES("skip.header.line.count"="2");
+-- EpisodeV table
+CREATE TABLE episodeV (name STRING, line STRING)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' TBLPROPERTIES("skip.header.line.count"="2");
+-- EpisodeVI table
+CREATE TABLE episodeVI (name STRING, line STRING)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' TBLPROPERTIES("skip.header.line.count"="2");
+
+-- Load data into tables
+LOAD DATA LOCAL INPATH '/root/InputData/episodeIV_dialouges.txt' INTO TABLE episodeIV;
+LOAD DATA LOCAL INPATH '/root/InputData/episodeV_dialouges.txt' INTO TABLE episodeV;
+LOAD DATA LOCAL INPATH '/root/InputData/episodeVI_dialouges.txt' INTO TABLE episodeVI;
+
+-- Activity1
+INSERT OVERWRITE DIRECTORY '/user/ramya/HiveProjectOutput4'
+SELECT name, COUNT(name) AS no_of_lines FROM episodeIV GROUP BY name ORDER BY no_of_lines DESC;
+INSERT OVERWRITE DIRECTORY '/user/ramya/HiveProjectOutput5'
+SELECT name, COUNT(name) AS no_of_lines FROM episodeV GROUP BY name ORDER BY no_of_lines DESC;
+INSERT OVERWRITE DIRECTORY '/user/ramya/HiveProjectOutput6'
+SELECT name, COUNT(name) AS no_of_lines FROM episodeVI GROUP BY name ORDER BY no_of_lines DESC;
+
+-- Activity2
+INSERT OVERWRITE DIRECTORY '/user/ramya/HiveProjectOutput_Activity2'
+SELECT COUNT(*) FROM episodeIV  WHERE INSTR(line, 'Luke') >= 1;                                                                                           
