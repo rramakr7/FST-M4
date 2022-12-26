@@ -1,0 +1,15 @@
+---create table to store input
+CREATE TABLE files(lines STRING);
+
+--load iput file into files
+LOAD DATA LOCAL INPATH '/root/file01.txt' INTO TABLE files
+
+-- count the words in the input file
+CREATE TABLE word_counts AS
+SELECT word, count(1) AS count FROM                --------- Reduce
+(SELECT explode(split(lines, ' ')) AS word FROM files) w ---- Map
+GROUP BY word
+ORDER BY word;
+
+--- to view the results 
+SELECT * FROM word_count;
